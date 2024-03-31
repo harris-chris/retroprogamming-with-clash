@@ -1,0 +1,163 @@
+{
+  "nodes": {
+    "clash-compiler": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "flake-utils": "flake-utils",
+        "ghc-tcplugins-extra": "ghc-tcplugins-extra",
+        "ghc-typelits-extra": "ghc-typelits-extra",
+        "ghc-typelits-knownnat": "ghc-typelits-knownnat",
+        "ghc-typelits-natnormalise": "ghc-typelits-natnormalise",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1707082272,
+        "narHash": "sha256-0H0AEhdAc9nSjgLmUCjpwGyl/HgcAiqHsEiTFnVEZjc=",
+        "owner": "clash-lang",
+        "repo": "clash-compiler",
+        "rev": "22b3a581a87bf079203302e732008219531ad36b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clash-lang",
+        "repo": "clash-compiler",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696426674,
+        "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "ghc-tcplugins-extra": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696947498,
+        "narHash": "sha256-Z7XOVnTZO/sbt/3QZgkyjXQyXATLfkJvajIWt53gXgY=",
+        "owner": "clash-lang",
+        "repo": "ghc-tcplugins-extra",
+        "rev": "45a55ee83850b7262786f652fb06739f4f9b1072",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clash-lang",
+        "repo": "ghc-tcplugins-extra",
+        "type": "github"
+      }
+    },
+    "ghc-typelits-extra": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696952849,
+        "narHash": "sha256-tgKZ5CwmNuTsYINM4ws2Sj6VnfUCExCBeA4cc3u4NPg=",
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-extra",
+        "rev": "d5578a1766edfb88c19bafc0c407739b6ea2e970",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-extra",
+        "type": "github"
+      }
+    },
+    "ghc-typelits-knownnat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1699952251,
+        "narHash": "sha256-qidcIbY74fp/115D5neoY4wlLlSm03CvUR3plDNb4oM=",
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-knownnat",
+        "rev": "8277741a2729746719e2c1c882733c9b58f23de8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-knownnat",
+        "type": "github"
+      }
+    },
+    "ghc-typelits-natnormalise": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696948844,
+        "narHash": "sha256-WAh98TBPXL8vbr/fyk4G6Qgwcyb+Cz6GJZOFxL1XxO4=",
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-natnormalise",
+        "rev": "f00e7c279944498fcc84259f56768f929ee02739",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clash-lang",
+        "repo": "ghc-typelits-natnormalise",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1707619277,
+        "narHash": "sha256-vKnYD5GMQbNQyyQm4wRlqi+5n0/F1hnvqSQgaBy4BqY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f3a93440fbfff8a74350f4791332a19282cc6dc8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1707514827,
+        "narHash": "sha256-Y+wqFkvikpE1epCx57PsGw+M1hX5aY5q/xgk+ebDwxI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "20f65b86b6485decb43c5498780c223571dd56ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "clash-compiler": "clash-compiler",
+        "nixpkgs": "nixpkgs_2"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
