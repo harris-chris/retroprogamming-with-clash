@@ -11,5 +11,4 @@ type Picoseconds (ps :: Nat) = ps
 
 type HzToPeriod (freq :: Nat) = 1_000_000_000_000 `Div` freq
 
-
 type ClockDivider dom ps = ps `Div` DomainPeriod dom

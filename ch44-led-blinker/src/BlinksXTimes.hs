@@ -1,6 +1,6 @@
 {-# LANGUAGE NumericUnderscores, PartialTypeSignatures #-}
 {-# OPTIONS_GHC -Wno-partial-type-signatures #-}
-module Blinker where
+module BlinksXTimes where
 import Clash.Prelude
 import CommonLib.Utils (succIdx)
 import CommonLib.Clock
