@@ -6,22 +6,28 @@ import CommonLib.Utils (succIdx)
 import CommonLib.Clock
 import Data.Either
 import Data.Maybe
+
+-- Test this, with, say
+-- clashi -isrc
+-- :load BlinkMultipleLedsAtDifferentSpeeds
+-- sampleN 10 $ topEntity clockGen
+
 -- Change this to the raw clock rate of the FPGA board you are targeting
 createDomain vSystem{vName="Dom100", vPeriod = hzToPeriod 100_000_000}
 
 -- on and off are type parameters!
-data OnOff on off
-    = On (Index on)
-    | Off (Index off)
+data OnOff period
+    = On (Index period)
+    | Off (Index period)
     deriving (Generic, NFDataX)
 
-isOn :: OnOff on off -> Bool
+isOn :: OnOff period -> Bool
 isOn On{} = True
 isOn Off{} = False
 
-countOnOff :: (KnownNat on, KnownNat off) => OnOff on off -> OnOff on off
-countOnOff (On x) = maybe (Off 0) On (succIdx x)
-countOnOff (Off y) = maybe (On 0) Off (succIdx y)
+incrementOnOff :: KnownNat period => OnOff period -> OnOff period
+incrementOnOff (On x) = maybe (Off 0) On (succIdx x)
+incrementOnOff (Off y) = maybe (On 0) Off (succIdx y)
 
 topEntity
     :: "CLK100MHZ" ::: Clock Dom100
@@ -29,33 +35,26 @@ topEntity
 topEntity clk =
     withClockResetEnable clk resetGen enableGen multiLeds
 
-blinkCount :: Nat
-blinkCount = 10
-
-data LedState dom p1 p2 = LedState
-    (OnOff (ClockDivider dom p1) (ClockDivider dom p1))
-    (OnOff (ClockDivider dom p2) (ClockDivider dom p2))
-
 initialState
-    :: (
-        KnownNat (ClockDivider dom (Microseconds 1))
-        , KnownNat (ClockDivider dom (Microseconds 2))
-        , forall dom. (HiddenClockResetEnable dom, _)
-    ) => LedState dom (Microseconds 1) (Microseconds 2)
-initialState = LedState _1 _2
+    :: forall dom. (HiddenClockResetEnable dom, _) =>
+    (OnOff 1, OnOff 2)
+initialState = (_1, _2)
     where
-        _1 :: (OnOff (ClockDivider dom (Microseconds 1)) (ClockDivider dom (Microseconds 1)))
         _1 = Off 0
-        _2 :: (OnOff (ClockDivider dom (Microseconds 2)) (ClockDivider dom (Microseconds 2)))
         _2 = Off 0
+
+incrementState :: (OnOff _1, OnOff _2) -> (OnOff _1, OnOff _2)
+incrementState (_1, _2) = (incrementOnOff _1, incrementOnOff _2)
+
+stateToBit :: (OnOff _1, OnOff _2) -> (Bit, Bit)
+stateToBit (_1, _2) = (boolToBit $ isOn _1, boolToBit $ isOn _2)
 
 multiLeds
     :: forall dom. (HiddenClockResetEnable dom, _)
     => Signal dom (Bit, Bit)
 -- boolToBit is being lifted to work with Signal dom (Bit, Bit)
-multiLeds = (fmap . fmap) (boolToBit . isOn) r
+multiLeds = stateToBit <$> r
     where
-        r :: LedState dom (Microseconds 1) (Microseconds 2)
-        r = register initialState $ (fmap . fmap) countOnOff r
-
+        r :: Signal dom (OnOff 1, OnOff 2)
+        r = register initialState $ incrementState <$> r
 
