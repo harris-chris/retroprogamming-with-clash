@@ -21,6 +21,11 @@ data OnOff period
     | Off (Index period)
     deriving (Generic, NFDataX)
 
+-- We need the this counter to tick up to a number of ticks corresponding to our desired period.
+-- So the question is, how many ticks in x time?
+-- The clock period will be in picoseconds, x is also expressed in picoseconds
+type OnOffFromPeriod dom ps = OnOff (ps `Div` (DomainPeriod dom))
+
 isOn :: OnOff period -> Bool
 isOn On{} = True
 isOn Off{} = False
@@ -37,7 +42,7 @@ topEntity clk =
 
 initialState
     :: forall dom. (HiddenClockResetEnable dom, _) =>
-    (OnOff 1, OnOff 2)
+    (OnOffFromPeriod dom (Picoseconds 50_000), OnOffFromPeriod dom (Picoseconds 100_000))
 initialState = (_1, _2)
     where
         _1 = Off 0
@@ -52,9 +57,7 @@ stateToBit (_1, _2) = (boolToBit $ isOn _1, boolToBit $ isOn _2)
 multiLeds
     :: forall dom. (HiddenClockResetEnable dom, _)
     => Signal dom (Bit, Bit)
--- boolToBit is being lifted to work with Signal dom (Bit, Bit)
 multiLeds = stateToBit <$> r
     where
-        r :: Signal dom (OnOff 1, OnOff 2)
         r = register initialState $ incrementState <$> r
 
