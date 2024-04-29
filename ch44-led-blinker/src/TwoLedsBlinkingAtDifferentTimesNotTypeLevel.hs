@@ -10,7 +10,7 @@ import Data.Maybe
 -- Test this, with, say
 -- clashi -isrc
 -- :load BlinkMultipleLedsAtDifferentSpeeds
--- sampleN 10 $ topEntity clockGen
+-- Data.List.findIndex (== (boolToBit True, boolToBit False)) $ sample $ topEntity clockGen
 
 -- Change this to the raw clock rate of the FPGA board you are targeting
 createDomain vSystem{vName="Dom100", vPeriod = hzToPeriod 100_000_000}
@@ -51,8 +51,8 @@ getClockPeriod millis = let
 initialState :: (OnOff, OnOff)
 initialState = (_1, _2)
     where
-        _1 = Off 0 5
-        _2 = Off 0 10
+        _1 = Off 0 $ getClockPeriod 5
+        _2 = Off 0 $ getClockPeriod 10
 
 incrementState :: (OnOff, OnOff) -> (OnOff, OnOff)
 incrementState (_1, _2) = (incrementOnOff _1, incrementOnOff _2)
