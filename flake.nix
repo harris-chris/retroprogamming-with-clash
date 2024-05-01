@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     clash-compiler.url = "github:clash-lang/clash-compiler";
- };
+};
   outputs = {
       self
       , nixpkgs

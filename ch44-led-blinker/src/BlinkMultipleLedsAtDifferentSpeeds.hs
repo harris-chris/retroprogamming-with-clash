@@ -1,4 +1,4 @@
-{-# LANGUAGE NumericUnderscores, PartialTypeSignatures #-}
+{-# LANGUAGE NumericUnderscores, PartialTypeSignatures, ScopedTypeVariables #-}
 {-# OPTIONS_GHC -Wno-partial-type-signatures #-}
 module BlinkMultipleLedsAtDifferentSpeeds where
 import Clash.Prelude
@@ -15,11 +15,6 @@ import Data.Maybe
 -- Change this to the raw clock rate of the FPGA board you are targeting
 createDomain vSystem{vName="Dom100", vPeriod = hzToPeriod 100_000_000}
 
--- on and off are type parameters!
-data OnOff period
-    = On (Index period)
-    | Off (Index period)
-    deriving (Generic, NFDataX)
 
 -- We need the this counter to tick up to a number of ticks corresponding to our desired period.
 -- So the question is, how many ticks in x time?
@@ -40,18 +35,25 @@ topEntity
 topEntity clk =
     withClockResetEnable clk resetGen enableGen multiLeds
 
-initialState
-    :: forall dom. (HiddenClockResetEnable dom, _) =>
-    (OnOffFromPeriod dom (Picoseconds 50_000), OnOffFromPeriod dom (Picoseconds 100_000))
-initialState = (_1, _2)
-    where
-        _1 = Off 0
-        _2 = Off 0
+-- on and off are type parameters!
+data OnOff period
+    = On (Index period)
+    | Off (Index period)
+    deriving (Generic, NFDataX)
 
-incrementState :: (OnOff _1, OnOff _2) -> (OnOff _1, OnOff _2)
+-- initialState
+--     :: forall dom. (OnOff (DomainPeriod dom), OnOff (DomainPeriod dom))
+-- initialState = (_1, _2)
+--     where
+--         _1 :: OnOff (DomainPeriod dom)
+--         _1 = Off 0
+--         _2 :: OnOff (DomainPeriod dom)
+--         _2 = On 0
+
+incrementState :: (KnownNat p1, KnownNat p2) => (OnOff p1, OnOff p2) -> (OnOff p1, OnOff p2)
 incrementState (_1, _2) = (incrementOnOff _1, incrementOnOff _2)
 
-stateToBit :: (OnOff _1, OnOff _2) -> (Bit, Bit)
+stateToBit :: (OnOff p1, OnOff p2) -> (Bit, Bit)
 stateToBit (_1, _2) = (boolToBit $ isOn _1, boolToBit $ isOn _2)
 
 multiLeds
@@ -59,5 +61,6 @@ multiLeds
     => Signal dom (Bit, Bit)
 multiLeds = stateToBit <$> r
     where
-        r = register initialState $ incrementState <$> r
+        r :: Signal dom (OnOff (50_000 `Div` (DomainPeriod dom)), OnOff (100_000 `Div` (DomainPeriod dom)))
+        r = register (On 0, On 0) $ incrementState <$> r
 

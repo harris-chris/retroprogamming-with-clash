@@ -7,6 +7,11 @@ import CommonLib.Clock
 import Data.Either
 import Data.Maybe
 
+-- This is the equivalent of BlinkMultipleLedsAtDifferentSpeeds, but where the clock ticks are
+-- measured as a normal variable, rather than at the type level. This makes it possible to have,
+-- say, a vector of `OnOff`, because this variable has no type parameters. Possibly it requires more
+-- registers? Might be worth looking at the difference in VHDL
+
 -- Test this, with, say
 -- clashi -isrc
 -- :load BlinkMultipleLedsAtDifferentSpeeds
