@@ -41,15 +41,6 @@ data OnOff period
     | Off (Index period)
     deriving (Generic, NFDataX)
 
--- initialState
---     :: forall dom. (OnOff (DomainPeriod dom), OnOff (DomainPeriod dom))
--- initialState = (_1, _2)
---     where
---         _1 :: OnOff (DomainPeriod dom)
---         _1 = Off 0
---         _2 :: OnOff (DomainPeriod dom)
---         _2 = On 0
-
 incrementState :: (KnownNat p1, KnownNat p2) => (OnOff p1, OnOff p2) -> (OnOff p1, OnOff p2)
 incrementState (_1, _2) = (incrementOnOff _1, incrementOnOff _2)
 
@@ -61,6 +52,6 @@ multiLeds
     => Signal dom (Bit, Bit)
 multiLeds = stateToBit <$> r
     where
-        r :: Signal dom (OnOff (50_000 `Div` (DomainPeriod dom)), OnOff (100_000 `Div` (DomainPeriod dom)))
+        r :: Signal dom (OnOffFromPeriod dom (Nanoseconds 50), OnOffFromPeriod dom (Nanoseconds 20))
         r = register (On 0, On 0) $ incrementState <$> r
 
