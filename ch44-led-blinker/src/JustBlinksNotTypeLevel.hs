@@ -7,6 +7,15 @@ import CommonLib.Clock
 import Data.Either
 import Data.Maybe
 
+-- What are the differences between JustBlinksNotTypeLevel and JustBlinks?
+-- Asides from `rst`, there is a single register in both programs, called `r`.
+-- If you look at the compiled verilog, there is a register r which has a role in the branching
+-- In JustBlinks, `r` is `reg [3:0]`, initially set to 10xx
+-- In JustBlinksNotTypeLevel, `r` is `reg [128:0]`, initially set to `{1'b1,64'sd0,64'sd5}`
+-- in both of these, there are associated wires (`c$case_alt` and `result` which have the same width
+-- and are there to store the r value.
+-- and `r` is the register which stores both curr1 (in 127:64) and max1 (in 63:0)
+
 -- This is the equivalent of JustBlinks, but where the clock ticks are
 -- measured as a normal variable, rather than at the type level. This makes it possible to have,
 -- say, a vector of `OnOff`, because this variable has no type parameters. Possibly it requires more
@@ -16,8 +25,8 @@ import Data.Maybe
 createDomain vSystem{vName="Dom100", vPeriod = hzToPeriod 100_000_000}
 
 data OnOff
-    = On { curr::Natural, max::Natural }
-    | Off { curr::Natural, max::Natural }
+    = On { curr::Integer, max::Integer }
+    | Off { curr::Integer, max::Integer }
     deriving (Generic, NFDataX)
 
 isOn :: OnOff -> Bool
@@ -40,11 +49,11 @@ topEntity
 topEntity clk =
     withClockResetEnable clk resetGen enableGen blinker
 
-getClockPeriod :: Natural -> Natural
+getClockPeriod :: Integer -> Integer
 getClockPeriod nanos = let
     clockPNat = clockPeriod @Dom100
-    clockP::Natural = fromInteger $ natVal $ clockPNat
-    targetP::Natural = nanos * 1_000
+    clockP::Integer = fromInteger $ natVal $ clockPNat
+    targetP::Integer = nanos * 1_000
     in targetP `div` clockP
 
 blinker
